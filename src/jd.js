@@ -19,7 +19,7 @@ global.__projectRoot = path.join(__dirname, '..');
   }
 
   if (argv.role !== 'compile' && argv.role !== 'match' && argv.role !== 'compileTest') {
-    console.error('Please specify --role');
+    console.error('Invalid role. Please specify a valid role via --role.');
     process.exit(1);
     return;
   }

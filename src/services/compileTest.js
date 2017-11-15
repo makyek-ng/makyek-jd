@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { execFile } from 'child-process-promise';
 import { argv } from 'yargs';
 import path from 'path';
@@ -14,7 +15,7 @@ export default async (logger) => {
     return;
   }
 
-  const compilers = ['gcc51c11', 'gcc49', 'gcc49c11', 'msvc2015', 'clang37', 'clang38', 'clang39'];
+  const compilers = _.keys(DI.config.compile).filter(v => !v.startsWith('_'));
   const testingDirectory = path.resolve(DI.config.runtimeDirectory, `compile/${uuid.v4()}`);
   await fsp.ensureDir(testingDirectory);
 

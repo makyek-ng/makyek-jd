@@ -4,12 +4,14 @@
   "private": true,
   "license": "MIT",
   "scripts": {
+    "jd:compileTest": "node .dist/jd.js --role compileTest",
     "jd:compile": "node .dist/jd.js --role compile",
     "jd:match": "node .dist/jd.js --role match",
     "jd:match:affinity": "start /affinity 1 node .dist/jd.js --role match",
     "build": "gulp clean && gulp jd",
     "watch:compile": "gulp clean && gulp --role compile",
-    "watch:match": "gulp clean && gulp --role match"
+    "watch:match": "gulp clean && gulp --role match",
+    "dep-install": "npm install --registry=https://registry.npm.taobao.org --disturl=https://npm.taobao.org/dist"
   },
   "dependencies": {
     "app-module-path": "^2.0.0",
@@ -28,7 +30,7 @@
     "iconv-lite": "^0.4.15",
     "jschardet": "^1.4.1",
     "lodash": "^4.16.2",
-    "lzma-native": "^1.5.2",
+    "lzma-native": "^3.0.2",
     "moment": "^2.15.1",
     "rascal": "breeswish/rascal#promisify-friendly",
     "request": "^2.75.0",
