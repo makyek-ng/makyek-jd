@@ -56,7 +56,6 @@ compile.doCompile = async ({ workingDirectory, code, compiler, limits }) => {
   let success, stdout, stderr;
 
   try {
-    console.log(execOptFile, execOptArgs);
     const execResult = await execFile(execOptFile, execOptArgs, {
       cwd: workingDirectory,
       env: compileConfig.env || {},

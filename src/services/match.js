@@ -1,6 +1,7 @@
 import { argv } from 'yargs';
 import { execFile } from 'child-process-promise';
 import AsyncCache from 'async-cache';
+import os from 'os';
 import path from 'path';
 import del from 'del';
 import fsp from 'fs-promise';
@@ -12,6 +13,8 @@ import utils from 'libs/utils';
 const LZMA_DECOMPRESS_OPTIONS = {
   threads: 1,
 };
+
+const JUDGE_QUEUE = 'reversi_judge';
 
 const EXITCODE_MIN = 33;
 const EXITCODE_MAX = EXITCODE_MIN + 3;
@@ -145,22 +148,41 @@ export default async (mq, logger) => {
     }
   }
 
-  mq.subscribe('judge', (err, subscription) => {
-    if (err) throw err;
-    subscription.on('error', err => logger.error(err));
-    subscription.on('message', async (message, task, ackOrNack) => {
-      logger.info('Match %s (round %s): %s', task.mdocid, task.rid, JSON.stringify(task));
-      const affinityCores = [utils.captureCore(), utils.captureCore()];
-      try {
-        await handleJudgeTask(task, affinityCores);
-      } catch (e) {
-        logger.error(e);
-      }
-      affinityCores.forEach(coreIndex => utils.releaseCore(coreIndex));
-      ackOrNack();
-    });
-  });
+  try {
+    await mq.assertQueue(JUDGE_QUEUE);
 
-  logger.info('Accepting match tasks...');
+    const prefetch = ~~((os.cpus().length - 1) / 2);
+    logger.info('Message queue prefetch %d.', prefetch);
+    mq.prefetch(prefetch);
+
+    mq.consume(JUDGE_QUEUE, msg => {
+      if (msg == null) {
+        return;
+      }
+      try {
+        const message = msg.content.toString();
+        const task = JSON.parse(message);
+        logger.info('Match %s (round %s): %s', task.mdocid, task.rid, message);
+
+        const affinityCores = [utils.captureCore(), utils.captureCore()];
+        handleJudgeTask(task, affinityCores)
+          .catch(e => logger.error(e))
+          .then(() => {
+            affinityCores.forEach(coreIndex => utils.releaseCore(coreIndex));
+            mq.ack(msg);
+          });
+      } catch (e) {
+        logger.warn('Failed to parse message content, discarded.');
+        logger.warn(e.stack);
+        mq.ack(msg);
+      }
+    });
+
+    logger.info('Accepting match tasks...');
+  } catch (e) {
+    logger.error(e.stack);
+    logger.warn('Message queue errors, exiting.');
+    process.exit(1);
+  }
 
 };

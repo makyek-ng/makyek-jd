@@ -13,6 +13,8 @@ const LZMA_COMPRESS_OPTIONS = {
   threads: 0,
 };
 
+const COMPILE_QUEUE = 'reversi_compile';
+
 export default async (mq, logger) => {
 
   if (argv.role !== 'compile') {
@@ -64,20 +66,33 @@ export default async (mq, logger) => {
     }
   }
 
-  mq.subscribe('compile', (err, subscription) => {
-    if (err) throw err;
-    subscription.on('error', err => logger.error(err));
-    subscription.on('message', async (message, task, ackOrNack) => {
-      logger.info('Compile %s: %s', task.sdocid, JSON.stringify(task));
-      try {
-        await handleCompileTask(task);
-      } catch (e) {
-        logger.error(e);
-      }
-      ackOrNack();
-    });
-  });
+  try {
+    await mq.assertQueue(COMPILE_QUEUE);
+    mq.prefetch(1);
 
-  logger.info('Accepting compiler tasks...');
+    mq.consume(COMPILE_QUEUE, msg => {
+      if (msg == null) {
+        return;
+      }
+      try {
+        const message = msg.content.toString();
+        const task = JSON.parse(message);
+        logger.info('Compile: %s: %s', task.sdocid, message);
+        handleCompileTask(task)
+          .catch(e => logger.error(e))
+          .then(() => mq.ack(msg));
+      } catch (e) {
+        logger.warn('Failed to parse message content, discarded.');
+        logger.warn(e.stack);
+        mq.ack(msg);
+      }
+    });
+
+    logger.info('Accepting compiler tasks...');
+  } catch (e) {
+    logger.error(e.stack);
+    logger.warn('Message queue errors, exiting.');
+    process.exit(1);
+  }
 
 };

@@ -9,14 +9,14 @@ mq:
   inject:
     - logger
 
-gmkcompile:
-  path: gmkcompile
+compile:
+  path: compile
   inject:
     - mq
     - logger
 
-gmkmatch:
-  path: gmkmatch
+match:
+  path: match
   inject:
     - mq
     - logger

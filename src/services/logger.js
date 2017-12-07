@@ -6,7 +6,7 @@ const timeFormatter = () => moment().format('YYYY-MM-DD HH:mm:ss Z');
 export default () => {
 
   const logger = new (winston.Logger)({
-    exitOnError: false,
+    exitOnError: true,
     transports: [
       new (winston.transports.Console)({
         name: 'console',

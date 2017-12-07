@@ -1,12 +1,32 @@
 # Reversi Judge Daemon
 
+## Usage
+
+```bash
+npm run build
+pm2 start pm2-compile.yaml
+pm2 start pm2-judge.yaml
+```
+
+## Show Logs
+
+```bash
+pm2 logs compile
+```
+
 ## Prerequisites
 
-Git
+- Git
 
-Node.js >= 6.0
+- Node.js >= 6.0
 
-TDM-GCC
+- TDM-GCC
+
+- PM2
+
+    ```bash
+    npm install -g pm2 --registry=https://registry.npm.taobao.org --disturl=https://npm.taobao.org/dist
+    ```
 
 ## Windows Sandbox
 

@@ -34,10 +34,8 @@ gulp.task('jd:develop', ['jd'], () => {
     watch: ['.'],
     ext: 'js yaml',
     ignore: ['node_modules/', '.dist/'],
+    delay: 2000,
     tasks: ['jd'],
-    env: {
-      'DEBUG': 'rascal:Vhost',
-    },
   });
 });
 

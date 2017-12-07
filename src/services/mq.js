@@ -1,21 +1,23 @@
-import bluebird from 'bluebird';
-import Rascal from 'rascal';
-
-bluebird.promisifyAll(Rascal.Broker);
-bluebird.promisifyAll(Rascal.Broker.prototype);
+import amqp from 'amqplib';
 
 export default async (logger) => {
-
-  const broker = await Rascal.Broker.createAsync(Rascal.withDefaultConfig(DI.config.mq));
-  broker.on('error', e => logger.error(e));
-
-  // promisified subscribe may lose message :(
-  // async subscribe(subscribeId) {
-  //   const subscription = await broker.subscribeAsync(subscribeId);
-  //   subscription.on('error', e => logger.error(e));
-  //   return subscription;
-  // },
-
-  return broker;
-
+  try {
+    logger.info('Attempting to connect to message queue...');
+    const conn = await amqp.connect(DI.config.mq.connection);
+    const ch = await conn.createChannel();
+    ch.on('close', () => {
+      logger.warn('Message queue closed, existing.');
+      process.exit(1);
+    });
+    ch.on('error', e => {
+      logger.error(e.stack);
+      logger.warn('Message queue errors, exiting.');
+      process.exit(1);
+    });
+    return ch;
+  } catch (e) {
+    logger.error(e.stack);
+    logger.warn('Message queue connection errors, exiting.');
+    process.exit(1);
+  }
 };
