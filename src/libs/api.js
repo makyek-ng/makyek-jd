@@ -1,4 +1,5 @@
 import rp from 'request-promise-native';
+import promiseRetry from 'promise-retry';
 import ExtendableError from 'es6-error';
 
 const api = {};
@@ -33,18 +34,22 @@ api.APIUserError = APIUserError;
 async function requestAsync(actionUrl, options = {}) {
   let resp;
   try {
-    resp = await rp({
-      simple: false,
-      resolveWithFullResponse: true,
-      url: `${DI.config.api.url}${actionUrl}`,
-      auth: {
-        user: DI.config.api.credential.username,
-        pass: DI.config.api.credential.password,
-      },
-      headers: {
-        'X-Requested-With': 'XMLHttpRequest',
-      },
-      ...options,
+    resp = await promiseRetry(retry => {
+      return rp({
+        simple: false,
+        resolveWithFullResponse: true,
+        url: `${DI.config.api.url}${actionUrl}`,
+        auth: {
+          user: DI.config.api.credential.username,
+          pass: DI.config.api.credential.password,
+        },
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+        },
+        ...options,
+      }).catch(retry);
+    }, {
+      retries: 5,
     });
   } catch (err) {
     throw new APIRequestError(err.message);

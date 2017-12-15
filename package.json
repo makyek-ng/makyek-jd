@@ -30,6 +30,7 @@
     "lodash": "^4.16.2",
     "lzma-native": "^3.0.2",
     "moment": "^2.15.1",
+    "promise-retry": "^1.1.1",
     "request": "^2.75.0",
     "request-promise-native": "^1.0.3",
     "shell-quote": "^1.6.1",
