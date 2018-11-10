@@ -112,6 +112,7 @@ export default async (mq, logger) => {
         'brain1.roundTimeout': task.rules.roundTimeout,
         'brain1.memoryLimit': task.rules.memoryLimit,
         'round.size': task.rules.size,
+        'round.limit': task.rules.roundLlimit,
       }, null, 2));
 
       let stdout, stderr, code = 0, summary = '';
