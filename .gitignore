@@ -60,3 +60,5 @@ sftp-config.json
 
 # webstorm
 .idea/
+
+config.yaml
