@@ -8,15 +8,14 @@ services:
     volumes:
       - ./config.yaml:/app/config.yaml:ro
     tmpfs:
-      - /app/logs:mode=770,uid=1000,gid=1000
+      - /app/makyek-jd/logs:mode=770,uid=1000,gid=1000
       - /runtime:mode=770,uid=1000,gid=1000
   jd-match:
-    build: .
     image: makyek-jd:latest
     restart: always
     command: node .dist/jd.js --role match
     volumes:
       - ./config.yaml:/app/config.yaml:ro
     tmpfs:
-      - /app/logs:mode=770,uid=1000,gid=1000
-      - /runtime:mode=770,uid=1000,gid=1000
+      - /app/makyek-jd/logs:mode=770,uid=1000,gid=1000
+      - /runtime:mode=770,uid=1000,gid=1000,exec
