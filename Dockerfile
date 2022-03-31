@@ -2,7 +2,7 @@ FROM node:8.17.0
 
 # note: fakechroot is used only for debugging. DO NOT use in production.
 RUN apt-get update -y \
-    && apt-get install -y sudo coreutils fakechroot busybox-static sudo \
+    && apt-get install -y sudo coreutils fakechroot busybox-static \
     && rm -r /var/lib/apt/lists/*
 
 RUN mkdir /app
