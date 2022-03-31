@@ -1,14 +1,13 @@
 FROM node:8.17.0
 
-# experimental
+# note: fakechroot is used only for debugging. DO NOT use in production.
 RUN apt-get update -y \
-    && apt-get install -y sudo fakechroot busybox-static \
+    && apt-get install -y sudo coreutils fakechroot busybox-static \
     && rm -r /var/lib/apt/lists/*
 
-RUN mkdir /app && chown -R 1000:1000 /app
-COPY --chown=1000:1000 . /app/makyek-jd
+RUN mkdir /app
+COPY --chown=0:0 . /app/makyek-jd
 
-USER 1000:1000
 RUN git clone https://github.com/next-makyek/makyek-judge.git /app/makyek-judge
 
 WORKDIR /app/makyek-judge

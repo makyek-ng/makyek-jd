@@ -12,11 +12,13 @@ global.__projectRoot = path.join(__dirname, '..');
 
 (async function start() {
 
-  if (process.getuid && process.getuid() === 0) {
-    console.error('Do not run in super privilege.');
-    process.exit(1);
-    return;
-  }
+  // dOcKeR iS sEcUrE!
+  // 
+  // if (process.getuid && process.getuid() === 0) {
+  //   console.error('Do not run in super privilege.');
+  //   process.exit(1);
+  //   return;
+  // }
 
   if (argv.role !== 'compile' && argv.role !== 'match' && argv.role !== 'compileTest') {
     console.error('Invalid role. Please specify a valid role via --role.');
