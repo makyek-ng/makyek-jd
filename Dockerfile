@@ -2,7 +2,7 @@ FROM node:8.17.0
 
 # experimental
 RUN apt-get update -y \
-    && apt-get install -y sudo fakechroot \
+    && apt-get install -y sudo fakechroot busybox-static \
     && rm -r /var/lib/apt/lists/*
 
 RUN mkdir /app && chown -R 1000:1000 /app
