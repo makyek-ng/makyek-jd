@@ -1,0 +1,10 @@
+*
+
+!/src
+!/clang
+!/.eslintrc.yml
+!/gulpfile.babel.js
+!/package.json
+!/package-lock.json
+!/pm2-*.yaml
+!/services.yaml

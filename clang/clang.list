@@ -1,0 +1,8 @@
+deb [signed-by=/usr/share/keyrings/llvm-snapshot.gpg.key] http://apt.llvm.org/buster/ llvm-toolchain-buster main
+deb-src [signed-by=/usr/share/keyrings/llvm-snapshot.gpg.key] http://apt.llvm.org/buster/ llvm-toolchain-buster main
+# 13 
+deb [signed-by=/usr/share/keyrings/llvm-snapshot.gpg.key] http://apt.llvm.org/buster/ llvm-toolchain-buster-13 main
+deb-src [signed-by=/usr/share/keyrings/llvm-snapshot.gpg.key] http://apt.llvm.org/buster/ llvm-toolchain-buster-13 main
+# 14 
+deb [signed-by=/usr/share/keyrings/llvm-snapshot.gpg.key] http://apt.llvm.org/buster/ llvm-toolchain-buster-14 main
+deb-src [signed-by=/usr/share/keyrings/llvm-snapshot.gpg.key] http://apt.llvm.org/buster/ llvm-toolchain-buster-14 main
