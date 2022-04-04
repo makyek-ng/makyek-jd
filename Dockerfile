@@ -12,7 +12,7 @@ RUN apt-get update -y \
 RUN mkdir /app
 COPY --chown=0:0 . /app/makyek-jd
 
-RUN git clone https://github.com/next-makyek/makyek-judge.git /app/makyek-judge
+RUN git clone https://github.com/makyek-ng/makyek-judge.git /app/makyek-judge
 
 WORKDIR /app/makyek-judge
 RUN npm ci \
